@@ -7,6 +7,7 @@ A comprehensive toolkit of Go utilities and helpers designed to simplify common 
 ExoPulse Go-Kit is a collection of lightweight, reusable Go packages that provide solutions for common programming tasks. The toolkit is designed with simplicity, performance, and modern Go practices in mind.
 
 ![Go](https://github.com/exopulse/go-kit/workflows/Go/badge.svg)
+[![codecov](https://codecov.io/gh/exopulse/go-kit/branch/main/graph/badge.svg)](https://codecov.io/gh/exopulse/go-kit)
 
 ## Features
 

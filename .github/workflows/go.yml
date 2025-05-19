@@ -23,8 +23,13 @@ jobs:
     - name: Get dependencies
       run: go mod download
 
-    - name: Run tests
-      run: go test -v ./...
+    - name: Run tests with coverage
+      run: go test -race -coverprofile=coverage.txt -covermode=atomic ./...
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
 
   build:
     name: Build
