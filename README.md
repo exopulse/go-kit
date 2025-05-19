@@ -6,6 +6,8 @@ A comprehensive toolkit of Go utilities and helpers designed to simplify common 
 
 ExoPulse Go-Kit is a collection of lightweight, reusable Go packages that provide solutions for common programming tasks. The toolkit is designed with simplicity, performance, and modern Go practices in mind.
 
+![Go](https://github.com/exopulse/go-kit/workflows/Go/badge.svg)
+
 ## Features
 
 - **Environment Configuration** (`envconf`): Parse environment variables into Go structs with extended boolean flag support and custom formats.
