@@ -8,6 +8,7 @@ import (
 
 // Loader loads environment variables from a file.
 type Loader struct {
+	lookuper   func(string) (string, bool)
 	setter     func(string, string) error
 	getwd      func() (string, error)
 	fileReader func(path string) (string, error)
@@ -16,6 +17,7 @@ type Loader struct {
 // NewLoader creates a new Loader.
 func NewLoader() *Loader {
 	return &Loader{
+		lookuper:   os.LookupEnv,
 		setter:     os.Setenv,
 		getwd:      os.Getwd,
 		fileReader: readOptionalFile,
@@ -35,19 +37,28 @@ func (l *Loader) LoadOptional(file string) error {
 		return fmt.Errorf("failed to read file: %w", err)
 	}
 
-	return apply(content, l.setter)
+	return apply(content, l.lookuper, l.setter)
 }
 
 // Apply loads the environment variables from the given content.
 func (l *Loader) Apply(content string) error {
-	return apply(content, l.setter)
+	return apply(content, l.lookuper, l.setter)
 }
 
 // apply sets the environment variables from the given content.
-func apply(content string, setter func(key, value string) error) error {
+func apply(
+	content string,
+	lookuper func(string) (string, bool),
+	setter func(key, value string) error,
+) error {
 	for _, line := range strings.Split(content, "\n") {
 		key, value := parseLine(line)
 		if key == "" {
+			continue
+		}
+
+		// do not override existing variables
+		if _, exists := lookuper(key); exists {
 			continue
 		}
 

@@ -23,6 +23,10 @@ func Test_autoLoad(t *testing.T) {
 
 		envLoader := NewLoader()
 
+		envLoader.lookuper = func(key string) (string, bool) {
+			return "", false
+		}
+
 		envLoader.setter = func(key, value string) error {
 			envs[key] = value
 

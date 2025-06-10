@@ -101,15 +101,24 @@ func Test_apply(t *testing.T) {
 	t.Run("empty", func(t *testing.T) {
 		t.Parallel()
 
+		getterCalled := false
 		setterCalled := false
 
-		err := apply("", func(key, value string) error {
-			setterCalled = true
+		err := apply(
+			"",
+			func(s string) (string, bool) {
+				getterCalled = true
 
-			return nil
-		})
+				return "", false
+			},
+			func(key, value string) error {
+				setterCalled = true
+
+				return nil
+			})
 
 		require.NoError(t, err)
+		require.False(t, getterCalled)
 		require.False(t, setterCalled)
 	})
 
@@ -118,14 +127,49 @@ func Test_apply(t *testing.T) {
 
 		env := map[string]string{}
 
-		err := apply("key=value\n\nkey2=value2", func(key, value string) error {
-			env[key] = value
+		err := apply(
+			"key=value\n\nkey2=value2",
+			func(key string) (string, bool) {
+				return "", false
+			},
+			func(key, value string) error {
+				env[key] = value
 
-			return nil
-		})
+				return nil
+			})
 
 		require.NoError(t, err)
 		require.Equal(t, map[string]string{"key": "value", "key2": "value2"}, env)
+	})
+
+	t.Run("existing-keys-skipped", func(t *testing.T) {
+		t.Parallel()
+
+		env := map[string]string{
+			"existing":       "existing_value",
+			"existing_empty": "",
+		}
+
+		err := apply(
+			"key=value\n\nkey2=value2\n\nexisting=new_value",
+			func(key string) (string, bool) {
+				value, ok := env[key]
+
+				return value, ok
+			},
+			func(key, value string) error {
+				env[key] = value
+
+				return nil
+			})
+
+		require.NoError(t, err)
+		require.Equal(t, map[string]string{
+			"key":            "value",
+			"key2":           "value2",
+			"existing":       "existing_value",
+			"existing_empty": "",
+		}, env)
 	})
 
 	t.Run("error", func(t *testing.T) {
@@ -133,9 +177,14 @@ func Test_apply(t *testing.T) {
 
 		forcedError := errors.New("forced-error")
 
-		err := apply("key=value", func(key, value string) error {
-			return forcedError
-		})
+		err := apply(
+			"key=value",
+			func(key string) (string, bool) {
+				return "", false
+			},
+			func(key, value string) error {
+				return forcedError
+			})
 
 		require.ErrorIs(t, err, forcedError)
 	})
