@@ -53,7 +53,9 @@ func apply(
 ) error {
 	for _, line := range strings.Split(content, "\n") {
 		key, value := parseLine(line)
-		if key == "" {
+		if key == "" || value == "" {
+			// we skip for empty values also so empty default values are not set
+			// otherwise we would skip these values as existing (see the next step)
 			continue
 		}
 
