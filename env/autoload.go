@@ -17,11 +17,6 @@ func AutoLoad(defaultEnvContent string) error {
 }
 
 func autoLoad(defaultEnvContent, selector string, loader *Loader) error {
-	// embedded
-	if err := loader.Apply(defaultEnvContent); err != nil {
-		return err
-	}
-
 	files := []string{
 		".env." + selector + ".local",
 		".env.local",
@@ -31,6 +26,11 @@ func autoLoad(defaultEnvContent, selector string, loader *Loader) error {
 		if err := loader.LoadOptional(file); err != nil {
 			return err
 		}
+	}
+
+	// embedded
+	if err := loader.Apply(defaultEnvContent); err != nil {
+		return err
 	}
 
 	return nil
