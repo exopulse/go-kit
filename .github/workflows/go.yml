@@ -69,8 +69,10 @@ jobs:
         version: latest
 
   cleanup:
-    name: Cleanup Old Workflow Runs
+    name: Cleanup old workflow runs
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
     steps:
       - name: Delete old workflow runs
         uses: Mattraks/delete-workflow-runs@v2
