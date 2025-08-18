@@ -18,7 +18,7 @@ jobs:
         check-latest: true
 
     - name: Check out code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Get dependencies
       run: go mod download
@@ -42,7 +42,7 @@ jobs:
         check-latest: true
 
     - name: Check out code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Get dependencies
       run: go mod download
@@ -61,7 +61,7 @@ jobs:
         check-latest: true
 
     - name: Check out code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: golangci-lint
       uses: golangci/golangci-lint-action@v8
