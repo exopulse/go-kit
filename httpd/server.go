@@ -24,7 +24,14 @@ type Server struct {
 
 // NewServer creates a new server.
 func NewServer(cfg Config, handler http.Handler) (*Server, error) {
-	ln, err := net.Listen("tcp", net.JoinHostPort(cfg.Interface, cfg.Port))
+	const timeout = 5 * time.Second
+
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+
+	var lc net.ListenConfig
+
+	ln, err := lc.Listen(ctx, "tcp", net.JoinHostPort(cfg.Interface, cfg.Port))
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to bind HTTP server")
 	}
