@@ -1,6 +1,6 @@
 module github.com/exopulse/go-kit
 
-go 1.24
+go 1.25
 
 require (
 	github.com/caarlos0/env/v7 v7.1.0
