@@ -34,12 +34,11 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 }
 
 // RegisterRoutes registers the routes to the router.
-func (r *Router) RegisterRoutes(path string, routes Route) {
-	routes.RegisterRoutes(r.rtr.Group(path))
-}
+func (r *Router) RegisterRoutes(path string, routes Route, middleware ...gin.HandlerFunc) {
+	group := r.rtr.Group(path)
 
-// RegisterGroup registers a group of routes to the router.
-func (r *Router) RegisterGroup(group *gin.RouterGroup, routes Route) {
+	group.Use(middleware...)
+
 	routes.RegisterRoutes(group)
 }
 

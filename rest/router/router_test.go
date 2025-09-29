@@ -83,15 +83,23 @@ func TestRouter_ServeHTTP(t *testing.T) {
 func TestRouter_RegisterRoutes(t *testing.T) {
 	r := New()
 
+	middlewareCalled := false
+
 	// create a mock route
 	mockHandler := func(c *gin.Context) {
 		c.Status(http.StatusOK)
 	}
 
+	sampleMiddleware := func(c *gin.Context) {
+		middlewareCalled = true
+
+		c.Next()
+	}
+
 	mockR := newMockRoute(mockHandler)
 
 	// register the mock route
-	r.RegisterRoutes("/api", mockR)
+	r.RegisterRoutes("/api", mockR, sampleMiddleware)
 
 	// verify the route was registered
 	require.True(t, mockR.registerRoutesCalled)
@@ -103,31 +111,9 @@ func TestRouter_RegisterRoutes(t *testing.T) {
 	r.ServeHTTP(w, req)
 
 	require.Equal(t, http.StatusOK, w.Code)
-}
 
-func TestRouter_RegisterGroup(t *testing.T) {
-	r := New()
-
-	// create a mock route
-	mockHandler := func(c *gin.Context) {
-		c.Status(http.StatusOK)
-	}
-
-	mockR := newMockRoute(mockHandler)
-
-	// register the mock route
-	r.RegisterGroup(r.rtr.Group("/api"), mockR)
-
-	// verify the route was registered
-	require.True(t, mockR.registerRoutesCalled)
-
-	// test that the route works
-	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/api/test", nil)
-
-	r.ServeHTTP(w, req)
-
-	require.Equal(t, http.StatusOK, w.Code)
+	// verify middleware is called
+	require.True(t, middlewareCalled)
 }
 
 func TestRouter_GetRoutes(t *testing.T) {
