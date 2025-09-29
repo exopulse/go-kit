@@ -105,6 +105,31 @@ func TestRouter_RegisterRoutes(t *testing.T) {
 	require.Equal(t, http.StatusOK, w.Code)
 }
 
+func TestRouter_RegisterGroup(t *testing.T) {
+	r := New()
+
+	// create a mock route
+	mockHandler := func(c *gin.Context) {
+		c.Status(http.StatusOK)
+	}
+
+	mockR := newMockRoute(mockHandler)
+
+	// register the mock route
+	r.RegisterGroup(r.rtr.Group("/api"), mockR)
+
+	// verify the route was registered
+	require.True(t, mockR.registerRoutesCalled)
+
+	// test that the route works
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/api/test", nil)
+
+	r.ServeHTTP(w, req)
+
+	require.Equal(t, http.StatusOK, w.Code)
+}
+
 func TestRouter_GetRoutes(t *testing.T) {
 	r := New()
 

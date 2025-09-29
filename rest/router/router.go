@@ -38,6 +38,11 @@ func (r *Router) RegisterRoutes(path string, routes Route) {
 	routes.RegisterRoutes(r.rtr.Group(path))
 }
 
+// RegisterGroup registers a group of routes to the router.
+func (r *Router) RegisterGroup(group *gin.RouterGroup, routes Route) {
+	routes.RegisterRoutes(group)
+}
+
 // GetRoutes returns the routes of the router.
 func (r *Router) GetRoutes() []RouteInfo {
 	routes := r.rtr.Routes()
