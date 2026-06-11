@@ -11,7 +11,7 @@ import (
 //
 //nolint:gochecknoglobals // this is acceptable for a logger
 var Global = zerolog.New(zerolog.NewConsoleWriter(func(w *zerolog.ConsoleWriter) {
-	w.FormatTimestamp = func(i interface{}) string {
+	w.FormatTimestamp = func(i any) string {
 		return i.(string) //nolint:forcetypeassert // we know the type
 	}
 })).With().Timestamp().Logger().Level(zerolog.InfoLevel)

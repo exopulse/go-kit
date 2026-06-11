@@ -10,17 +10,17 @@ func parseLine(line string) (string, string) {
 
 	line = trimComment(line)
 
-	separatorAt := strings.Index(line, separator)
-	if separatorAt < 0 {
+	key, value, found := strings.Cut(line, separator)
+	if !found {
 		return "", ""
 	}
 
-	key := strings.TrimSpace(line[:separatorAt])
+	key = strings.TrimSpace(key)
 	if key == "" {
 		return "", ""
 	}
 
-	value := unquote(strings.TrimSpace(line[separatorAt+len(separator):]))
+	value = unquote(strings.TrimSpace(value))
 
 	return key, value
 }

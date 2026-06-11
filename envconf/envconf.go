@@ -23,7 +23,7 @@ func Parse(v any) error {
 
 func customParsers() map[reflect.Type]envs.ParserFunc {
 	return map[reflect.Type]envs.ParserFunc{
-		reflect.TypeOf(true): func(v string) (any, error) {
+		reflect.TypeFor[bool](): func(v string) (any, error) {
 			switch v {
 			case "on", "yes":
 				return true, nil
@@ -33,7 +33,7 @@ func customParsers() map[reflect.Type]envs.ParserFunc {
 				return strconv.ParseBool(v)
 			}
 		},
-		reflect.TypeOf(timex.Duration(0)): func(v string) (any, error) {
+		reflect.TypeFor[timex.Duration](): func(v string) (any, error) {
 			return timex.ParseDuration(v)
 		},
 	}

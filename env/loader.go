@@ -51,7 +51,7 @@ func apply(
 	lookuper func(string) (string, bool),
 	setter func(key, value string) error,
 ) error {
-	for _, line := range strings.Split(content, "\n") {
+	for line := range strings.SplitSeq(content, "\n") {
 		key, value := parseLine(line)
 		if key == "" || value == "" {
 			// we skip for empty values also so empty default values are not set

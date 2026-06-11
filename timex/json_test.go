@@ -77,7 +77,5 @@ func mustParse(s string) Duration {
 }
 
 func mustParseRef(s string) *Duration {
-	d := mustParse(s)
-
-	return &d
+	return new(mustParse(s))
 }
