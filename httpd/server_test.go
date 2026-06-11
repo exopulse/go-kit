@@ -19,10 +19,10 @@ func TestNewServer(t *testing.T) {
 
 	require.NoError(t, err)
 
-	defer func() {
-		ctx, cancel := context.WithTimeout(t.Context(), 5*time.Second)
-		defer cancel()
+	ctx, cancel := context.WithTimeout(t.Context(), 5*time.Second)
+	defer cancel()
 
+	defer func() {
 		_ = ts.Stop(ctx)
 	}()
 
@@ -30,7 +30,7 @@ func TestNewServer(t *testing.T) {
 	doneCh := make(chan struct{}, 1)
 
 	go func() {
-		if err := ts.Run(); err != nil {
+		if err := ts.Run(ctx); err != nil {
 			errorCh <- err
 
 			return

@@ -49,7 +49,7 @@ func NewServer(cfg Config, handler http.Handler) (*Server, error) {
 }
 
 // Run runs the server. It blocks until the server is stopped.
-func (s *Server) Run() error {
+func (s *Server) Run(_ context.Context) error {
 	// ErrServerClosed is returned when the server is stopped.
 	// ErrClosed is returned when the listener is closed.
 	// We don't want to return an error in these cases.
