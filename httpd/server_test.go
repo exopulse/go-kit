@@ -42,7 +42,7 @@ func TestNewServer(t *testing.T) {
 	t.Run("connect", func(t *testing.T) {
 		require.NotEmpty(t, ts.Address())
 
-		for i := 0; i < 10; i++ {
+		for range 10 {
 			rsp, err := http.Get("http://" + ts.Address())
 			if err != nil {
 				time.Sleep(100 * time.Millisecond)
