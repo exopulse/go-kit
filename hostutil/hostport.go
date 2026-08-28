@@ -18,6 +18,7 @@ type HostPort struct {
 //   - :port
 //   - host:
 //   - [ipv6-host]:port (e.g. [::1]:8080)
+//   - [ipv6-host] (e.g. [::1])
 //   - bare IPv6 host (e.g. ::1, 2001:db8::1)
 //
 // The method inserts specified defaultPort if port is omitted in address provided.
@@ -44,6 +45,10 @@ func NewHostPort(address, port, defaultPort string) HostPort {
 		}
 
 		return HostPort{Host: host, Port: addrPort}
+	}
+
+	if len(address) >= 2 && address[0] == '[' && address[len(address)-1] == ']' {
+		return HostPort{Host: address[1 : len(address)-1], Port: port}
 	}
 
 	return HostPort{Host: address, Port: port}
