@@ -23,6 +23,10 @@ func TestNewHostPort(t *testing.T) {
 		{"server:1234", "", "8080", HostPort{"server", "1234"}, "server:1234"},
 		{"server:", "9090", "8080", HostPort{"server", "9090"}, "server:9090"},
 		{"server:", "", "8080", HostPort{"server", "8080"}, "server:8080"},
+		{"::1", "", "8080", HostPort{"::1", "8080"}, "[::1]:8080"},
+		{"2001:db8::1", "", "8080", HostPort{"2001:db8::1", "8080"}, "[2001:db8::1]:8080"},
+		{"[::1]:9090", "", "8080", HostPort{"::1", "9090"}, "[::1]:9090"},
+		{"[::1]:", "9090", "8080", HostPort{"::1", "9090"}, "[::1]:9090"},
 	}
 
 	for _, tt := range tests {

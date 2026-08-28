@@ -17,6 +17,8 @@ type HostPort struct {
 //   - host:port
 //   - :port
 //   - host:
+//   - [ipv6-host]:port (e.g. [::1]:8080)
+//   - bare IPv6 host (e.g. ::1, 2001:db8::1)
 //
 // The method inserts specified defaultPort if port is omitted in address provided.
 // The method panics if defaultPort is not specified.
@@ -36,17 +38,15 @@ func NewHostPort(address, port, defaultPort string) HostPort {
 		return HostPort{Port: port}
 	}
 
-	colonAt := strings.Index(address, ":")
+	if host, addrPort, err := net.SplitHostPort(address); err == nil {
+		if addrPort == "" {
+			addrPort = port
+		}
 
-	if colonAt == -1 {
-		return HostPort{Host: address, Port: port}
+		return HostPort{Host: host, Port: addrPort}
 	}
 
-	if colonAt+1 == len(address) {
-		return HostPort{Host: address[0:colonAt], Port: port}
-	}
-
-	return HostPort{Host: address[0:colonAt], Port: address[colonAt+1:]}
+	return HostPort{Host: address, Port: port}
 }
 
 // String implements Stringer interface.
