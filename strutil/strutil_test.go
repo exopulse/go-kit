@@ -46,6 +46,8 @@ func TestLimitLength(t *testing.T) {
 		{"over", "over-the-limit", 8, "over-the"},
 		{"utf-split", "šđčćžŠĐČĆŽ", 5, "šđčćž"},
 		{"utf-mix-split", "asdŽŠČ", 4, "asdŽ"},
+		{"zero", "text", 0, ""},
+		{"negative", "text", -1, ""},
 	}
 
 	for _, tt := range tests {

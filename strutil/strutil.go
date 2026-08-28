@@ -29,7 +29,12 @@ func Override(value, defaultValue string) string {
 }
 
 // LimitLength limits the string length to a specified value.
+// A negative maxLen is treated as zero.
 func LimitLength(s string, maxLen int) string {
+	if maxLen < 0 {
+		maxLen = 0
+	}
+
 	if utf8.RuneCountInString(s) > maxLen {
 		rs := []rune(s)
 
