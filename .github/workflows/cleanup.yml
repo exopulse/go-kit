@@ -5,10 +5,15 @@ on:
     - cron: '0 0 * * *' # daily at midnight
   workflow_dispatch: # allow manual trigger
 
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
 jobs:
   cleanup:
     name: Cleanup
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     permissions:
       actions: write
     steps:
