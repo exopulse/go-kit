@@ -80,6 +80,14 @@ func Test_Uncapitalize(t *testing.T) {
 			input: "UPPER",
 			want:  "uPPER",
 		},
+		"multibyte-upper": {
+			input: "Švabo",
+			want:  "švabo",
+		},
+		"multibyte-no-case": {
+			input: "日本語",
+			want:  "日本語",
+		},
 	}
 
 	for name, tt := range tests {

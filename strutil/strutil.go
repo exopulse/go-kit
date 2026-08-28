@@ -1,7 +1,7 @@
 package strutil
 
 import (
-	"strings"
+	"unicode"
 	"unicode/utf8"
 )
 
@@ -46,5 +46,7 @@ func Uncapitalize(s string) string {
 		return s
 	}
 
-	return strings.ToLower(string(s[0])) + s[1:]
+	r, size := utf8.DecodeRuneInString(s)
+
+	return string(unicode.ToLower(r)) + s[size:]
 }
