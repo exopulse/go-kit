@@ -35,5 +35,5 @@ func (d *Duration) UnmarshalJSON(b []byte) error {
 
 	*d = pd
 
-	return err
+	return nil
 }
