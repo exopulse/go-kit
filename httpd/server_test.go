@@ -92,3 +92,31 @@ func TestNewServer(t *testing.T) {
 		t.Fatalf("timeout waiting for server to stop (timeout: %s)", timeout)
 	}
 }
+
+func TestServer_Run_ContextCancel(t *testing.T) {
+	ts, err := NewServer(Config{
+		Interface: "127.0.0.1",
+		Port:      "",
+	}, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusAccepted)
+	}))
+
+	require.NoError(t, err)
+
+	ctx, cancel := context.WithCancel(t.Context())
+
+	runErrCh := make(chan error, 1)
+
+	go func() {
+		runErrCh <- ts.Run(ctx)
+	}()
+
+	cancel()
+
+	select {
+	case err := <-runErrCh:
+		require.NoError(t, err)
+	case <-time.After(5 * time.Second):
+		t.Fatal("timeout waiting for Run to return after context cancellation")
+	}
+}

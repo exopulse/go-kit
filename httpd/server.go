@@ -48,8 +48,19 @@ func NewServer(cfg Config, handler http.Handler) (*Server, error) {
 	}, nil
 }
 
-// Run runs the server. It blocks until the server is stopped.
-func (s *Server) Run(_ context.Context) error {
+// Run runs the server. It blocks until the server is stopped or ctx is cancelled.
+func (s *Server) Run(ctx context.Context) error {
+	stopped := make(chan struct{})
+	defer close(stopped)
+
+	go func() {
+		select {
+		case <-ctx.Done():
+			_ = s.listener.Close()
+		case <-stopped:
+		}
+	}()
+
 	// ErrServerClosed is returned when the server is stopped.
 	// ErrClosed is returned when the listener is closed.
 	// We don't want to return an error in these cases.
