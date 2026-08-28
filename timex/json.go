@@ -19,13 +19,25 @@ func (d *Duration) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON converts JSON value to Duration.
 // Non-empty value is unquoted and converted to Duration.
-// Empty value is converted to idn.Nil.
+// A JSON null or an empty string is converted to the zero Duration.
 func (d *Duration) UnmarshalJSON(b []byte) error {
 	s := string(b)
 	l := len(s)
 
+	if s == "null" {
+		*d = 0
+
+		return nil
+	}
+
 	if l >= 2 && b[0] == '"' && b[l-1] == '"' {
 		s = s[1 : l-1]
+	}
+
+	if s == "" {
+		*d = 0
+
+		return nil
 	}
 
 	pd, err := ParseDuration(s)

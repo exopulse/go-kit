@@ -50,6 +50,8 @@ func TestJSON_Decode(t *testing.T) {
 		{`{"duration":"3mo"}`, &object2{}, &object2{mustParseRef("3mo")}, false},
 		{`{"duration":null}`, &object2{}, &object2{}, false},
 		{`{"duration":"error"}`, &object2{}, nil, true},
+		{`{"duration":null}`, &object1{}, &object1{}, false},
+		{`{"duration":""}`, &object1{}, &object1{}, false},
 	}
 
 	for _, tt := range tests {
