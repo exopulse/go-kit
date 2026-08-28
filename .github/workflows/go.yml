@@ -7,10 +7,18 @@ on:
     branches: [ main ]
   workflow_dispatch: # allow manual trigger
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
     - name: Check out code
       uses: actions/checkout@v7
@@ -34,6 +42,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
     - name: Check out code
       uses: actions/checkout@v7
@@ -52,6 +61,7 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
     - name: Check out code
       uses: actions/checkout@v7
@@ -65,5 +75,3 @@ jobs:
       uses: golangci/golangci-lint-action@v9
       with:
         version: latest
-
-  
