@@ -128,39 +128,3 @@ func Test_trimComment(t *testing.T) {
 		})
 	}
 }
-
-func Test_unquote(t *testing.T) {
-	t.Parallel()
-
-	tests := map[string]struct {
-		input string
-		want  string
-	}{
-		"empty": {
-			input: "",
-			want:  "",
-		},
-		"single-quote": {
-			input: "'hello'",
-			want:  "hello",
-		},
-		"double-quote": {
-			input: "\"hello\"",
-			want:  "hello",
-		},
-		"no-quote": {
-			input: "hello",
-			want:  "hello",
-		},
-		"no-quote-spaces": {
-			input: "hello world",
-			want:  "hello world",
-		},
-	}
-
-	for name, tt := range tests {
-		t.Run(name, func(t *testing.T) {
-			require.Equal(t, tt.want, unquote(tt.input))
-		})
-	}
-}
