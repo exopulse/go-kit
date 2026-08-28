@@ -91,7 +91,20 @@ func main() {
 
 ## Requirements
 
-- Go 1.24 or higher
+- Go 1.27 or higher
+
+## Development
+
+```bash
+task build    # build all packages
+task test     # run tests with race detector and coverage
+task lint     # golangci-lint + go vet
+task scan     # osv-scanner for dependency vulnerabilities
+task check    # build + lint + test + scan
+task tidy     # go mod tidy
+```
+
+Requires [Task](https://taskfile.dev).
 
 ## License
 
