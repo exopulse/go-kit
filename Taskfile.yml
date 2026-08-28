@@ -1,0 +1,36 @@
+version: "3"
+
+tasks:
+  build:
+    desc: Build all packages
+    cmds:
+      - go build -v ./...
+
+  test:
+    desc: Run tests with race detector and coverage
+    cmds:
+      - go test -race -coverprofile=coverage.txt -covermode=atomic ./...
+
+  lint:
+    desc: Run golangci-lint and go vet
+    cmds:
+      - golangci-lint run
+      - go vet ./...
+
+  scan:
+    desc: Run osv-scanner for dependency vulnerabilities
+    cmds:
+      - osv-scanner -r .
+
+  check:
+    desc: Full quality gate — build + lint + test + scan
+    cmds:
+      - task: build
+      - task: lint
+      - task: test
+      - task: scan
+
+  tidy:
+    desc: Tidy Go modules
+    cmds:
+      - go mod tidy
