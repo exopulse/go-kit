@@ -4,6 +4,8 @@ import (
 	"regexp"
 )
 
+var addressListSeparator = regexp.MustCompile("[,;]")
+
 // ComposeAddress composes host address from a specified address, port and a default port.
 // Supported formats for address are:
 //   - host
@@ -32,5 +34,5 @@ func ComposeAddresses(addresses []string, port, defaultPort string) []string {
 // ComposeAddressList composes host addresses from a specified addresses, port and a default port.
 // Multiple addresses are delimited with comma or semi-column.
 func ComposeAddressList(addresses string, port, defaultPort string) []string {
-	return ComposeAddresses(regexp.MustCompile("[,;]").Split(addresses, -1), port, defaultPort)
+	return ComposeAddresses(addressListSeparator.Split(addresses, -1), port, defaultPort)
 }
