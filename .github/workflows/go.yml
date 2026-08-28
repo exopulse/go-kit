@@ -28,11 +28,11 @@ jobs:
       with:
         go-version-file: go.mod
 
-    - name: Get dependencies
-      run: go mod download
+    - name: Set up Task
+      uses: go-task/setup-task@v2
 
     - name: Run tests with coverage
-      run: go test -race -coverprofile=coverage.txt -covermode=atomic ./...
+      run: task test
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v7
@@ -52,11 +52,11 @@ jobs:
       with:
         go-version-file: go.mod
 
-    - name: Get dependencies
-      run: go mod download
+    - name: Set up Task
+      uses: go-task/setup-task@v2
 
     - name: Build
-      run: go build -v ./...
+      run: task build
 
   lint:
     name: Lint
@@ -71,7 +71,33 @@ jobs:
       with:
         go-version-file: go.mod
 
-    - name: golangci-lint
-      uses: golangci/golangci-lint-action@v9
+    - name: Set up Task
+      uses: go-task/setup-task@v2
+
+    - name: Install golangci-lint
+      run: go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
+
+    - name: Lint
+      run: task lint
+
+  scan:
+    name: Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v7
+
+    - name: Set up Go
+      uses: actions/setup-go@v7
       with:
-        version: latest
+        go-version-file: go.mod
+
+    - name: Set up Task
+      uses: go-task/setup-task@v2
+
+    - name: Install osv-scanner
+      run: go install github.com/google/osv-scanner/v2/cmd/osv-scanner@latest
+
+    - name: Scan for vulnerabilities
+      run: task scan
