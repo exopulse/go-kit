@@ -25,11 +25,27 @@ func parseLine(line string) (string, string) {
 	return key, value
 }
 
+// trimComment strips a trailing "# ..." comment from the line.
+// A '#' inside a single- or double-quoted span is not treated as a comment,
+// so quoted values may contain '#' (e.g. hello="pass#word").
 func trimComment(line string) string {
-	const comment = "#"
+	const comment = '#'
 
-	if commentAt := strings.Index(line, comment); commentAt != -1 {
-		line = line[:commentAt]
+	var quote byte
+
+	for i := range len(line) {
+		c := line[i]
+
+		switch {
+		case quote != 0:
+			if c == quote {
+				quote = 0
+			}
+		case c == '"' || c == '\'':
+			quote = c
+		case c == comment:
+			return line[:i]
+		}
 	}
 
 	return line

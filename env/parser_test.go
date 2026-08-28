@@ -59,6 +59,16 @@ func Test_parseLine(t *testing.T) {
 			wantKey:   "hello",
 			wantValue: "world=again",
 		},
+		"key-value-quoted-hash": {
+			input:     `hello="pass#word"`,
+			wantKey:   "hello",
+			wantValue: "pass#word",
+		},
+		"key-value-quoted-hash-trailing-comment": {
+			input:     `hello="pass#word" # comment`,
+			wantKey:   "hello",
+			wantValue: "pass#word",
+		},
 	}
 
 	for name, tt := range tests {
@@ -97,6 +107,18 @@ func Test_trimComment(t *testing.T) {
 		"comment-spaces": {
 			input: " # hello",
 			want:  " ",
+		},
+		"hash-inside-double-quotes": {
+			input: `hello="pass#word"`,
+			want:  `hello="pass#word"`,
+		},
+		"hash-inside-single-quotes": {
+			input: `hello='pass#word'`,
+			want:  `hello='pass#word'`,
+		},
+		"hash-after-quoted-value": {
+			input: `hello="world" # comment`,
+			want:  `hello="world" `,
 		},
 	}
 
